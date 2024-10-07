@@ -12,11 +12,11 @@
 
 # Regular Prediction
 
-![Regular Result](/image/Regular Result.png)
+![Regular Result](./image/Regular Result.png)
 
 # Flixible Prediction
 
-![Flexible Result](/image/Flexible Result1.png)
+![Flexible Result](./image/Flexible Result1.png)
 
 ![Flexible Result](/image/Flexible Result2.png)
 
