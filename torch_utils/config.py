@@ -71,7 +71,7 @@ def task_config(parser):
 
 
 def get_args(add_config: Callable = None):
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description='STD2Vformer Project')
     if add_config is not None:
         parser = add_config(parser)  # hyperparameters set in main
     parser = base_config(parser)
