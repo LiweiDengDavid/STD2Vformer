@@ -18,7 +18,7 @@
 
 ![Flexible Result](./image/Flexible_Result1.png)
 
-![Flexible Result](/image/Flexible_Result2.png)
+![Flexible Result](./image/Flexible_Result2.png)
 
 
 
