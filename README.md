@@ -1,6 +1,6 @@
 # STD2Vformer
 
-A pytorch implementation for the paper: '*Flexible Spatiotemporal Prediction Based on Spatiotemporal Embedding*‘
+A pytorch implementation for the paper: '*An Efficient and Flexible Spatiotemporal Prediction Model*‘
 
 # 🎯Overview
 
