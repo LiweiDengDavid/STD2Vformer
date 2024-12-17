@@ -53,9 +53,9 @@ def build_dataloader(args, test=False):
         val_dataset = scaler.transform(val_dataset.reshape(-1,num_features))
         test_dataset = scaler.transform(test_dataset.reshape(-1,num_features))
 
-        train_dataset = train_dataset.reshape(train_len,num_features,num_nodes)
-        val_dataset = val_dataset.reshape(val_len, num_features,num_nodes)
-        test_dataset = test_dataset.reshape(test_len, num_features,num_nodes)
+        train_dataset = np.transpose(train_dataset.reshape(train_len,num_nodes,num_features),(0,2,1))
+        val_dataset = np.transpose(val_dataset.reshape(val_len,num_nodes,num_features),(0,2,1))
+        test_dataset = np.transpose(test_dataset.reshape(test_len,num_nodes,num_features),(0,2,1))
         mean = scaler.mean_.reshape(1, num_features,1)
         std = scaler.scale_.reshape(1, num_features,1)
 
@@ -69,9 +69,9 @@ def build_dataloader(args, test=False):
         val_dataset = scaler.transform(val_dataset.reshape(-1,num_features))
         test_dataset = scaler.transform(test_dataset.reshape(-1,num_features))
 
-        train_dataset = train_dataset.reshape(train_len, num_features, num_nodes)
-        val_dataset = val_dataset.reshape(val_len, num_features, num_nodes)
-        test_dataset = test_dataset.reshape(test_len, num_features, num_nodes)
+        train_dataset = np.transpose(train_dataset.reshape(train_len,num_nodes,num_features),(0,2,1))
+        val_dataset = np.transpose(val_dataset.reshape(val_len,num_nodes,num_features),(0,2,1))
+        test_dataset = np.transpose(test_dataset.reshape(test_len,num_nodes,num_features),(0,2,1))
 
         min_values = scaler.data_min_.reshape(1, num_features,1)
         max_values = scaler.data_max_.reshape(1, num_features,1)
