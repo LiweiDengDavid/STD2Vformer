@@ -1,6 +1,6 @@
 # STD2Vformer
 
-A pytorch implementation for the paper: '*An Efficient and Flexible Spatiotemporal Prediction Model*‘
+A pytorch implementation for the paper: '*STD2Vformer: A prediction-length-agnostic model for Spatiotemporal Prediction*‘,  other baseline code please refer to：https://github.com/TCCofWANG/Spatial-Temporal-Forecasting-Library
 
 # 🎯Overview
 
@@ -69,4 +69,6 @@ Comming Soon!
 We express our gratitude to the following members for their contributions to the project, completed under the guidance of Professor [Hao Wang](https://tccofwang.github.io/index.html):
 
  [Liwei Deng](https://liweidengdavid.github.io/), [Junhao Tan](http://paradise2200.github.io), [Xinhe Niu](https://xinheniu.github.io/)
+
+
 
