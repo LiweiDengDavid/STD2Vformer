@@ -1,6 +1,6 @@
 # STD2Vformer
 
-A pytorch implementation for the paper: '*STD2Vformer: A prediction-length-agnostic model for Spatiotemporal Prediction*‘,  other baseline code please refer to：https://github.com/TCCofWANG/Spatial-Temporal-Forecasting-Library
+A pytorch implementation for the paper: '*STD2Vformer: A prediction-length-agnostic model for Spatiotemporal Prediction*‘,  We reference the implementation of other baseline models from this [repository](https://github.com/TCCofWANG/Spatial-Temporal-Forecasting-Library).
 
 # 🎯Overview
 
@@ -46,12 +46,6 @@ We have provided all the experimental scripts for the benchmarks in the `./scrip
 
 
 
-# 📧Contact
-
-For any questions or feedback, feel free to contact [Liwei Deng](mailto:liweidengdavid@gmail.com).
-
-
-
 # 🌟Citation
 
 If you find this work is helpful to your research, please consider citing our paper:
@@ -64,11 +58,7 @@ Comming Soon!
 
 
 
-# 🤝Acknowledgments
 
-We express our gratitude to the following members for their contributions to the project, completed under the guidance of Professor [Hao Wang](https://tccofwang.github.io/index.html):
-
- [Liwei Deng](https://liweidengdavid.github.io/), [Junhao Tan](http://paradise2200.github.io), [Xinhe Niu](https://xinheniu.github.io/)
 
 
 
