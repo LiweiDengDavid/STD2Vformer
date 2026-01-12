@@ -14,11 +14,12 @@ A pytorch implementation for the paper: '*STD2Vformer: A prediction-length-agnos
 
 ![Regular Result](./image/Regular_Result.png)
 
+Please refer to the paper for experimental results on additional datasets.
+
 # 📊Flexible Prediction
 
-![Flexible Result](./image/Flexible_Result1.png)
+![Flexible Result](./image/Flexible_Result.png)
 
-![Flexible Result](./image/Flexible_Result2.png)
 
 # 📝Install dependecies
 
