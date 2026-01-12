@@ -16,7 +16,7 @@ device=torch.device('cuda'if torch.cuda.is_available() else 'cpu')
 class EXP():
     def __init__(self,args):
         assert args.resume_dir==args.output_dir
-        self.agrs=args
+        self.args=args
         tu.dist.init_distributed_mode(args)  # Initializing Distributed Training
 
         # get_data
@@ -113,7 +113,7 @@ class EXP():
             seqs_time, targets_time = seqs_time.permute(0, 2, 3, 1), targets_time.permute(0, 2, 3, 1) #(B,C,N,L)
             # TODO Input and output are both (B,C,N,L). The output's feature dimension defaults to 1
             self.adj = np.array(self.adj)  # If it's not an array, then the first dimension is split in half when it's fed into the mod
-            pred = self.model(seqs,self.adj,seqs_time=seqs_time,targets_time=targets_time,targets=targets,mode=mode,index=index,epoch=epoch)  # 输入模型
+            pred = self.model(seqs,self.adj,seqs_time=seqs_time,targets_time=targets_time,targets=targets,mode=mode,index=index,epoch=epoch)  # Input to model
 
             if args.model_name=='STD2Vformer':
                 if mode == 'train':
@@ -163,7 +163,7 @@ class EXP():
         return epoch_logs
 
     def train(self):
-        args=self.agrs
+        args=self.args
         if args.resume!=True:
             tu.config.create_output_dir(args)  # Create directories for output
             print('output dir: {}'.format(args.output_dir))
@@ -227,7 +227,7 @@ class EXP():
             self.start_epoch=ckpt['epoch']
 
     def test(self):
-        args=self.agrs
+        args=self.args
         try:
             dp_mode = args.args.dp_mode
         except AttributeError as e:

@@ -109,8 +109,8 @@ class STD2Vformer(nn.Module):
         if epoch==0:
             teacher_forcing_ratio = 1
         else:
-            teacher_forcing_ratio= 0.99 ** (global_step/(self.batch_idx_max/5)) # 相当于一个epoch，其对应的值缩小5次
-        return teacher_forcing_ratio # 100为初始值，表示最开始的初始值
+            teacher_forcing_ratio= 0.99 ** (global_step/(self.batch_idx_max/5)) # Equivalent to one epoch; its corresponding value is reduced by a factor of 5
+        return teacher_forcing_ratio # 100 denotes the initial value at the start of training
 
 
     def forward(self,input,adj,**kwargs):

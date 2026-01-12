@@ -6,7 +6,7 @@ def split_dataset(dataset: np.ndarray, split_rate=0.8):
     '''
     groups=1
     :param dataset: x: (L, N, C)
-    :param split_rate:切分数据集的比例
+    :param split_rate:Dataset split ratio
     :return: train: (L, N, C), test: (L, N, C)
     '''
     total_seq_len, num_nodes, _ = dataset.shape

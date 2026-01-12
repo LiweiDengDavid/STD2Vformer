@@ -81,8 +81,8 @@ class Date2Vec(nn.Module):
         mark=tau.shape[1]
         # There should be different mappings (center and neighbor) for different nodes.
         # Because theoretically the CENTER node should have the largest contribution and the NEIGHBOR node should have a lower contribution compared to the CENTER node.
-        date_x=tau.unsqueeze(-2).repeat(1,1,N,M,1)[...,:L] # 把日期周期也纳入
-        data=torch.cat([data,date_x],dim=1) # 在特征维度上进行concat
+        date_x=tau.unsqueeze(-2).repeat(1,1,N,M,1)[...,:L] # Include date periodicity as features
+        data=torch.cat([data,date_x],dim=1) # Concatenate along the feature dimension
         data=torch.einsum('bcnml,cdm->bdnml',data,self.weight)
         tau = tau.unsqueeze(1).unsqueeze(-2) # (B,1,d_mark,1,1,L+O)
         tau= tau.repeat(1,1, 1, self.num_nodes,M, 1)  # (B,C+d_mark,d_mark,N,M,L+O)
