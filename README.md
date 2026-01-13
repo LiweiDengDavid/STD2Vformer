@@ -1,6 +1,6 @@
 # STD2Vformer
 
-A pytorch implementation for the paper: '*STD2Vformer: A prediction-length-agnostic model for Spatiotemporal Prediction*‘,  We reference the implementation of other baseline models from this [repository](https://github.com/TCCofWANG/Spatial-Temporal-Forecasting-Library).
+A pytorch implementation for the paper: '*STD2Vformer: A Free-form Spatiotemporal Forecasting Model*‘,  We reference the implementation of other baseline models from this [repository](https://github.com/TCCofWANG/Spatial-Temporal-Forecasting-Library).
 
 # 🎯Overview
 
