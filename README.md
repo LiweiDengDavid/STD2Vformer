@@ -8,7 +8,7 @@ A pytorch implementation for the paper: '*STD2Vformer: A Free-form Spatiotempora
 
 <center><p>Figure1.The overall architecture of the proposed STD2Vformer</p></center>				
 
-
+  
 
 # 📊Regular Prediction
 
