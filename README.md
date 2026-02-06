@@ -10,13 +10,13 @@ A pytorch implementation for the paper: '*STD2Vformer: A Free-form Spatiotempora
 
   
 
-# 📊Regular Prediction
+# 📊Fixed-Horizon Prediction
 
 ![Regular Result](./image/Regular_Result.png)
 
 Please refer to the paper for experimental results on additional datasets.
 
-# 📊Flexible Prediction
+# 📊Free-Form Prediction
 
 ![Flexible Result](./image/Flexible_Result.png)
 
@@ -33,7 +33,7 @@ pip install -r requirements.txt
 
 # 👉Data Preparation
 
-The Los Angeles traffic speed files (METR-LA), as well as the Los Angeles traffic flow files (PEMS04 and PEMS08), can be accessed and downloaded from [Baidu Yun](https://pan.baidu.com/s/1ShuACUFZGR0EnEkIoYSw-A?pwd=ib60) or [Google Drive](https://drive.google.com/drive/folders/1lcv-QYH7nAk9ciGFOurSam6SJVWaW-lg?usp=sharing). Please place these files in the `datasets/` folder.
+The Los Angeles traffic speed files (METR-LA), as well as the Los Angeles traffic flow files (PEMS04, PEMS08 and PEMS-Bay), can be accessed and downloaded from [Baidu Yun](https://pan.baidu.com/s/1ShuACUFZGR0EnEkIoYSw-A?pwd=ib60) or [Google Drive](https://drive.google.com/drive/folders/1lcv-QYH7nAk9ciGFOurSam6SJVWaW-lg?usp=sharing). Please place these files in the `datasets/` folder.
 
 
 
