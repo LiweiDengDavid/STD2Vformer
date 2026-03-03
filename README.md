@@ -1,65 +1,92 @@
 # STD2Vformer
 
-A pytorch implementation for the paper: '*STD2Vformer: A Free-form Spatiotemporal Forecasting Model*‘,  We reference the implementation of other baseline models from this [repository](https://github.com/TCCofWANG/Spatial-Temporal-Forecasting-Library).
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/release/python-390/) [![PyTorch 1.1+](https://img.shields.io/badge/PyTorch-1.1+-ee4c2c.svg)](https://pytorch.org/) [![Paper](https://img.shields.io/badge/Paper-IEEE%20TII-blue)](https://doi.org/10.1109/TII.2026.3655106) [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-# 🎯Overview
+This is the **Official PyTorch Implementation** for the paper:  
+> **STD2Vformer: A Free-form Spatiotemporal Forecasting Model**  
+> *IEEE Transactions on Industrial Informatics (TII), 2026*  
+> Liwei Deng, Hao Wang, Junhao Tan, Xinhe Niu, Yuxin He, Shiyao Zhang, and Zhihai He.
 
-![](./image/overview.png)	
-
-<center><p>Figure1.The overall architecture of the proposed STD2Vformer</p></center>				
-
-  
-
-# 📊Fixed-Horizon Prediction
-
-![Regular Result](./image/Regular_Result.png)
-
-Please refer to the paper for experimental results on additional datasets.
-
-# 📊Free-Form Prediction
-
-![Flexible Result](./image/Flexible_Result.png)
+---
 
 
-# 📝Install dependecies
+## 🎯 Overview
 
-Install the required packages
+STD2Vformer is a novel architecture designed for free-form spatiotemporal forecasting. 
 
-```
+<div align="center">
+  <img src="./image/overview.png" width="80%">
+  <br>
+  <b>Figure 1.</b> The overall architecture of the proposed STD2Vformer.
+</div>
+
+## 🛠️ Installation
+
+### 1. Environment Setup
+
+We recommend using Anaconda to manage your environment.
+
+```bash
+# Create a virtual environment
+conda create -n STD2Vformer python=3.9
+conda activate STD2Vformer
+
+# Install dependencies
 pip install -r requirements.txt
 ```
 
+## 📂 Data Preparation
 
+We use the standard traffic forecasting datasets: **METR-LA**, **PEMS04**, **PEMS08**, and **PEMS-BAY**.
 
-# 👉Data Preparation
+### Download Links
+- **Baidu Netdisk**: [Link](https://pan.baidu.com/s/1ShuACUFZGR0EnEkIoYSw-A?pwd=ib60)
+- **Google Drive**: [Link](https://drive.google.com/drive/folders/1lcv-QYH7nAk9ciGFOurSam6SJVWaW-lg?usp=sharing)
 
-The Los Angeles traffic speed files (METR-LA), as well as the Los Angeles traffic flow files (PEMS04, PEMS08 and PEMS-Bay), can be accessed and downloaded from [Baidu Yun](https://pan.baidu.com/s/1ShuACUFZGR0EnEkIoYSw-A?pwd=ib60) or [Google Drive](https://drive.google.com/drive/folders/1lcv-QYH7nAk9ciGFOurSam6SJVWaW-lg?usp=sharing). Please place these files in the `datasets/` folder.
+### Directory Structure
+Please organize the downloaded files in the `datasets/` folder as follows:
 
-
-
-# 🚀Run Experiment
-
-We have provided all the experimental scripts for the benchmarks in the `./scripts` folder, which cover all the benchmarking experiments. To reproduce the results, you can run the following shell code.
-
-```python
-   ./scripts/train.sh
+```plain
+STD2Vformer/
+├── datasets/
+│   ├── METR-LA/
+│   ├── PEMS04/
+│   ├── PEMS08/
+│   └── PEMS-BAY/
+├── scripts/
+├── ...
 ```
 
+## 🚀 Experiment
 
+We provide shell scripts to reproduce the experimental results on benchmarks.
 
-# 🌟Citation
+```bash
+# Grant execution permission
+chmod 776 ./scripts/train.sh
 
-If you find this work is helpful to your research, please consider citing our paper:
-
+# Run the training script
+./scripts/train.sh
 ```
-Comming Soon!
+
+## 🌟 Citation
+
+If you find this work helpful to your research, please consider citing our paper:
+
+```bibtex
+@ARTICLE{Deng2026,
+  author={Deng, Liwei and Wang, Hao and Tan, Junhao and Niu, Xinhe and He, Yuxin and Zhang, Shiyao and He, Zhihai},
+  journal={IEEE Transactions on Industrial Informatics}, 
+  title={STD2Vformer: A Free-Form Spatiotemporal Forecasting Model}, 
+  year={2026},
+  pages={1-12},
+  doi={10.1109/TII.2026.3655106}
+}
 ```
 
-**Thanks for your interest in our work!**
+## 🤝 Acknowledgements
 
-
-
-
-
-
-
+We appreciate the following github repositories for their valuable code references:
+- [Spatial-Temporal-Forecasting-Library](https://github.com/TCCofWANG/Spatial-Temporal-Forecasting-Library)
+- [THML-Time-Series-Library](https://github.com/thuml/Time-Series-Library)
+- [Time-Series-Library](https://github.com/TCCofWANG/Deep-Learning-based-Time-Series-Forecasting)
