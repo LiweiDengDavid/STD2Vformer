@@ -5,7 +5,7 @@
 This is the **Official PyTorch Implementation** for the paper:  
 > **STD2Vformer: A Free-form Spatiotemporal Forecasting Model**  
 > *IEEE Transactions on Industrial Informatics (TII), 2026*  
-> Liwei Deng, Hao Wang, Junhao Tan, Xinhe Niu, Yuxin He, Shiyao Zhang, and Zhihai He.
+> Liwei Deng, Hao Wang<sup>&dagger;</sup>, Junhao Tan, Xinhe Niu, Yuxin He, Shiyao Zhang, and Zhihai He.
 
 ---
 
