@@ -12,13 +12,23 @@ This is the **Official PyTorch Implementation** for the paper:
 
 ## 🎯 Overview
 
-STD2Vformer is a novel architecture designed for free-form spatiotemporal forecasting. 
+STD2Vformer is a novel architecture designed for **free-form spatiotemporal forecasting**. 
 
 <div align="center">
   <img src="./image/overview.png" width="80%">
   <br>
   <b>Figure 1.</b> The overall architecture of the proposed STD2Vformer.
 </div>
+
+
+Most existing models focus on **fixed-horizon prediction**, where the prediction starts immediately after the input with a fixed length. In contrast, **free-form prediction** (as illustrated in **Figure 2**) allows both the starting position (gap) and the length of the predicted sequence to be freely adjusted during training and inference.
+
+<div align="center">
+  <img src="./image/Preliminary.png" width="80%">
+  <br>
+  <b>Figure 2.</b> Comparison between fixed-horizon and free-form prediction. The <b>blue solid line</b> represents the input, the <b>green dashed line</b> is the prediction, and the <b>orange solid line</b> indicates the interval. <b>Left:</b> Fixed-horizon prediction (Gap=0, fixed length). <b>Right:</b> Free-form prediction where both gap and prediction length can vary freely.
+</div>
+
 
 ## 🛠️ Installation
 
