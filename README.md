@@ -75,7 +75,7 @@ STD2Vformer currently supports three experiment modes.
 
 | Mode | Script | Description |
 | --- | --- | --- |
-| Regular Train | `scripts/regular_train.sh` | Standard fixed-horizon forecasting |
+| Fixed-Horizon Prediction | `scripts/fixed-horizon_prediction.sh` | Standard fixed-horizon forecasting |
 | Free-Form No Retrain | `scripts/free-form_no_retrain.sh` | Train once and evaluate multiple horizons directly |
 | Free-Form Retrain | `scripts/free-form_retrain.sh` | Pretrain first, then finetune for each target horizon |
 
@@ -83,11 +83,11 @@ STD2Vformer currently supports three experiment modes.
 
 Run one of the following scripts depending on the experiment setting you want.
 
-#### 🧭 Regular Train
+#### 🧭 Fixed-Horizon Prediction
 
 ```bash
-chmod 776 ./scripts/regular_train.sh
-./scripts/regular_train.sh
+chmod 776 ./scripts/fixed-horizon_prediction.sh
+./scripts/fixed-horizon_prediction.sh
 ```
 
 #### 🪄 Free-Form Without Retraining
