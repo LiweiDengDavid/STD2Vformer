@@ -61,7 +61,11 @@ def build_dataloader(args, test=False):
 
         train_dataset = SubwayDataset(train_dataset, train_time_dataset, args.seq_len, args.pred_len,std=std,mean=mean)
         val_dataset = SubwayDataset(val_dataset, val_time_dataset, args.seq_len, args.pred_len,std=std,mean=mean)
-        test_dataset = SubwayDataset(test_dataset, test_time_dataset, args.seq_len, args.pred_len,std=std,mean=mean)
+        # For flexible prediction, the test set must cover the longest evaluation horizon
+        _test_pred_len = (max(getattr(args, 'pred_len_test', [args.pred_len]))
+                         if getattr(args, 'flexible', False) else args.pred_len)
+        _test_pred_len = max(_test_pred_len, args.pred_len)  # never shorter than training horizon
+        test_dataset = SubwayDataset(test_dataset, test_time_dataset, args.seq_len, _test_pred_len, std=std,mean=mean)
 
     elif args.data_name=="PEMS04"or args.data_name=="PEMS08":
         scaler = MinMaxScaler(feature_range=(-1, 1))
@@ -77,7 +81,11 @@ def build_dataloader(args, test=False):
         max_values = scaler.data_max_.reshape(1, num_features,1)
         train_dataset = SubwayDataset(train_dataset, train_time_dataset, args.seq_len, args.pred_len, max=max_values,min=min_values)
         val_dataset = SubwayDataset(val_dataset, val_time_dataset, args.seq_len, args.pred_len, max=max_values,min=min_values)
-        test_dataset = SubwayDataset(test_dataset, test_time_dataset, args.seq_len, args.pred_len, max=max_values,min=min_values)
+        # For flexible prediction, the test set must cover the longest evaluation horizon
+        _test_pred_len = (max(getattr(args, 'pred_len_test', [args.pred_len]))
+                         if getattr(args, 'flexible', False) else args.pred_len)
+        _test_pred_len = max(_test_pred_len, args.pred_len)
+        test_dataset = SubwayDataset(test_dataset, test_time_dataset, args.seq_len, _test_pred_len, max=max_values,min=min_values)
     else:
         assert print("Dataset normalization undefined")
 
@@ -94,7 +102,7 @@ def build_dataloader(args, test=False):
                                            num_workers=args.num_workers, pin_memory=args.pin_memory)
 
         val_sampler = data.DistributedSampler(val_dataset, seed=args.seed)
-        val_dataloader = DataLoader(test_dataset, args.batch_size, sampler=test_sampler,
+        val_dataloader = DataLoader(val_dataset, args.batch_size, sampler=val_sampler,
                                           num_workers=args.num_workers, pin_memory=args.pin_memory, drop_last=False)
 
         test_sampler = data.DistributedSampler(test_dataset, seed=args.seed)
@@ -121,9 +129,10 @@ def build_dataloader(args, test=False):
         train_dataloader.std, val_dataloader.std, test_dataloader.std = std, std, std
 
     elif args.data_name == "PEMS04" or args.data_name == "PEMS08":
-        min, max = np.expand_dims(min_values, axis=-1), np.expand_dims(max_values, axis=-1)  # (B=1,C,N,L=1)
-        train_dataloader.min, val_dataloader.min, test_dataloader.min = min, min, min
-        train_dataloader.max, val_dataloader.max, test_dataloader.max = max, max, max
+        min_arr = np.expand_dims(min_values, axis=-1)  # (B=1,C,N,L=1)
+        max_arr = np.expand_dims(max_values, axis=-1)
+        train_dataloader.min, val_dataloader.min, test_dataloader.min = min_arr, min_arr, min_arr
+        train_dataloader.max, val_dataloader.max, test_dataloader.max = max_arr, max_arr, max_arr
     return adj, train_dataloader, val_dataloader, test_dataloader, train_sampler, val_sampler, test_sampler
 
 

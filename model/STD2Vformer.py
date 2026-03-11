@@ -58,6 +58,15 @@ class STD2Vformer(nn.Module):
         # loss
         self.mae=nn.L1Loss()
 
+        # Non-blind meta-information module: inject pred_len/seq_len ratio as a learnable feature
+        if getattr(args, 'is_no_blind', False):
+            self.RangeMLP = nn.Sequential(
+                nn.Linear(1, 32),
+                nn.ReLU(),
+                nn.Linear(32, self.args.seq_len)
+            )
+            self.backMLP = nn.Linear(self.in_feature + 1, self.in_feature)
+
     def construct_memory(self):
         # Memory bank
         self.memory_bank = nn.Parameter(torch.randn(self.num_nodes, self.d_model,device='cuda'), requires_grad=True)
@@ -138,6 +147,18 @@ class STD2Vformer(nn.Module):
         '''Input Module'''
         hidden = self.Input_module(input_data=input_data.clone(), seq_time=seq_time)
         x= self.bn_funsion(hidden+self.conv_input(x))
+
+        # Non-blind meta-information: encode pred_len/seq_len ratio and fuse into x
+        if getattr(self.args, 'is_no_blind', False):
+            pred_len = target.shape[-1]
+            seq_len = input_data.shape[-1]
+            ratio_pred = pred_len / seq_len
+            range_feature = self.RangeMLP(torch.tensor([ratio_pred], dtype=torch.float32).to(input.device))
+            x = torch.concat([x, range_feature.unsqueeze(0).unsqueeze(1).unsqueeze(1).expand(
+                x.shape[0], -1, x.shape[2], x.shape[3])], dim=1)
+            x = x.transpose(1, -1)
+            x = self.backMLP(x)
+            x = x.transpose(1, -1)
 
         '''STD2V module'''
         '''#Sample module#'''

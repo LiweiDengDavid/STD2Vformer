@@ -58,9 +58,9 @@ def base_config(parser):
 def task_config(parser):
     # Training-related settings
     parser.add_argument('--seed', type=int, default=21)
-    parser.add_argument('--end_epoch', type=int, default=1)
+    parser.add_argument('--end_epoch', type=int, default=1000)
     parser.add_argument('--clip_max_norm', type=int, default=-1)
-    parser.add_argument('--patience', type=int, default=5)
+    parser.add_argument('--patience', type=int, default=10)
     parser.add_argument('--use_16bit', action='store_true')
     parser.add_argument('--num_workers', type=int, default=2)
     parser.add_argument('--dataset_dir', type=str, default='./datasets/')

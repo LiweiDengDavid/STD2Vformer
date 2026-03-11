@@ -69,15 +69,72 @@ STD2Vformer/
 
 ## 🚀 Experiment
 
-We provide shell scripts to reproduce the experimental results on benchmarks.
+STD2Vformer currently supports three experiment modes.
+
+### 📚 Experiment Modes
+
+| Mode | Script | Description |
+| --- | --- | --- |
+| Regular Train | `scripts/regular_train.sh` | Standard fixed-horizon forecasting |
+| Free-Form No Retrain | `scripts/free-form_no_retrain.sh` | Train once and evaluate multiple horizons directly |
+| Free-Form Retrain | `scripts/free-form_retrain.sh` | Pretrain first, then finetune for each target horizon |
+
+### ⚡ Quick Start
+
+Run one of the following scripts depending on the experiment setting you want.
+
+#### 🧭 Regular Train
 
 ```bash
-# Grant execution permission
-chmod 776 ./scripts/train.sh
-
-# Run the training script
-./scripts/train.sh
+chmod 776 ./scripts/regular_train.sh
+./scripts/regular_train.sh
 ```
+
+#### 🪄 Free-Form Without Retraining
+
+```bash
+chmod 776 ./scripts/free-form_no_retrain.sh
+./scripts/free-form_no_retrain.sh
+```
+
+#### 🔄 Free-Form With Retraining
+
+```bash
+chmod 776 ./scripts/free-form_retrain.sh
+./scripts/free-form_retrain.sh
+```
+
+### 🧠 Non-Blind Setting (`w/NB`)
+
+In the paper, `w/NB` denotes **with Non-Blind meta-information**.
+
+In this repository, that setting is controlled by:
+
+```bash
+--is_no_blind True
+```
+
+The corresponding relation is:
+
+- `w/NB`  ↔  `is_no_blind=True`
+- `w/o NB` ↔ `is_no_blind=False`
+
+> 💡 Note
+> 
+> The provided free-form scripts currently use `--is_no_blind False` by default.
+> If you want to reproduce the `w/NB` setting, change it to `True` in the script,
+> or pass `--is_no_blind True` manually when running `main.py`.
+
+### ⚙️ Common Free-Form Arguments
+
+| Argument | Meaning |
+| --- | --- |
+| `--flexible` | Enable free-form prediction |
+| `--retrain` | Enable per-horizon retraining |
+| `--pred_len` | Prediction horizon used during training |
+| `--pred_len_test` | Evaluation horizons for free-form prediction |
+| `--alpha` | Random horizon-shortening probability during training |
+| `--is_no_blind` | Whether to use Non-Blind meta-information |
 
 ## 🌟 Citation
 

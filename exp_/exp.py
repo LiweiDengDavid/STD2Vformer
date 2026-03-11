@@ -7,6 +7,7 @@ from data.data_process import *
 from data.get_data import build_dataloader
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 import numpy as np
 import test
 import yaml
@@ -38,7 +39,7 @@ class EXP():
         self.criterion2 = nn.MSELoss()
 
         # Adam introducing weight-decaying
-        optimizer = torch.optim.AdamW(self.model.parameters(), lr=args.lr, weight_decay=args.weight_decay)  #
+        optimizer = torch.optim.AdamW(self.model.parameters(), lr=args.lr, weight_decay=args.weight_decay)  
         self.optimizer=optimizer
 
         # weight decay
@@ -81,8 +82,6 @@ class EXP():
     def build_model(self,args,adj):
         if args.model_name == 'STD2Vformer':
             args.dropout = 0.0
-            args.D2V_outmodel = args.D2V_outmodel  # Denote the output of D2V as dimension
-            args.M = args.M   # Indicates how many nodes are taken
             self.model = STD2Vformer(in_feature=args.num_features, num_nodes=args.num_nodes, adj=adj, dropout=args.dropout,
                                 args=args)
 
@@ -111,6 +110,17 @@ class EXP():
             seqs_time, targets_time = seqs_time.cuda().float(), targets_time.cuda().float()
             seqs,targets=seqs.permute(0,2,3,1),targets.permute(0,2,3,1)  #(B,C,N,L)
             seqs_time, targets_time = seqs_time.permute(0, 2, 3, 1), targets_time.permute(0, 2, 3, 1) #(B,C,N,L)
+            # ---- Flexible training: randomly shorten the prediction horizon ----
+            if (mode == 'train'
+                    and getattr(args, 'flexible', False)
+                    and getattr(args, 'alpha', 0.0) > 0
+                    and len(getattr(args, 'pred_len_test', [])) > 0):
+                if torch.rand(1).item() < args.alpha:
+                    seg_len = args.pred_len_test[
+                        torch.randint(0, len(args.pred_len_test), (1,)).item()]
+                    if targets.shape[-1] >= seg_len:
+                        targets = targets[..., -seg_len:]
+                        targets_time = targets_time[..., -seg_len:]
             # TODO Input and output are both (B,C,N,L). The output's feature dimension defaults to 1
             self.adj = np.array(self.adj)  # If it's not an array, then the first dimension is split in half when it's fed into the mod
             pred = self.model(seqs,self.adj,seqs_time=seqs_time,targets_time=targets_time,targets=targets,mode=mode,index=index,epoch=epoch)  # Input to model
@@ -133,6 +143,8 @@ class EXP():
                 loss = loss1
             elif args.loss_type=='MSE':
                 loss = loss2
+            elif args.loss_type == 'smooth_l1_loss':
+                loss = F.smooth_l1_loss(pred.to(targets.device), targets)
             else:
                 loss = loss1 + 0.3 * loss2
 
@@ -226,8 +238,9 @@ class EXP():
             self.lr_optimizer.load_state_dict(ckpt['lr_scheduler'])
             self.start_epoch=ckpt['epoch']
 
-    def test(self):
+    def test(self, **kwargs):
         args=self.args
+        pred_len_test = kwargs.get('pred_len_test', None)
         try:
             dp_mode = args.args.dp_mode
         except AttributeError as e:
@@ -237,7 +250,8 @@ class EXP():
         if args.resume:
             self.load_best_model(path=self.resume_path, args=args, distributed=dp_mode)
         star = datetime.now()
-        metric_dict=test.test(args,self.model,test_dataloader=self.test_dataloader,adj=self.adj)
+        metric_dict=test.test(args,self.model,test_dataloader=self.test_dataloader,adj=self.adj,
+                              pred_len_test=pred_len_test)
         end=datetime.now()
         test_cost_time=(end-star).total_seconds()
         print("test cost：{0}s".format(test_cost_time))
@@ -254,8 +268,8 @@ class EXP():
         if not os.path.exists(log_path):
             table_head = [['dataset', 'model', 'time', 'LR',
                           'batch_size', 'seed', 'MAE', 'MSE', 'RMSE','MAPE','seq_len',
-                           'pred_len', 'd_model', 'd_ff','M','D2V_outmodel','test_cost_time',
-                            'Loss','info','output_dir']]
+                           'pred_len', 'pred_len_test', 'd_model', 'd_ff','M','D2V_outmodel',
+                           'test_cost_time', 'Loss', 'flexible', 'retrain', 'info','output_dir']]
             Write_csv.write_csv(log_path, table_head, 'w+')
 
         time = datetime.now().strftime('%Y%m%d-%H%M%S')  # Get current system time
@@ -263,8 +277,11 @@ class EXP():
                   'LR': args.lr,
                   'batch_size': args.batch_size,
                   'seed': args.seed, 'MAE': mae, 'MSE': mse,'RMSE':rmse,"MAPE":mape,'seq_len': args.seq_len,
-                  'pred_len': args.pred_len,'d_model': args.d_model, 'd_ff': args.d_ff,'M':args.M,'D2V_outmodel':args.D2V_outmodel,
+                  'pred_len': args.pred_len, 'pred_len_test': pred_len_test,
+                  'd_model': args.d_model, 'd_ff': args.d_ff,'M':args.M,'D2V_outmodel':args.D2V_outmodel,
                   'test_cost_time': test_cost_time,'Loss':args.loss_type,
+                  'flexible': getattr(args, 'flexible', False),
+                  'retrain': getattr(args, 'retrain', False),
                   'info': args.info,'output_dir':args.output_dir}]
         Write_csv.write_csv_dict(log_path, a_log, 'a+')
 

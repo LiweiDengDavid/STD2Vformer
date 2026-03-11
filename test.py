@@ -107,6 +107,48 @@ def calc_metrics(sources, outputs,mean=None,std=None,max=None,min=None):
 
 
 @torch.no_grad()
+def flexible_pred_st_graph_data(model, dataloader, adj, args, pred_len_test):
+    """
+    Free-Form prediction for STD2Vformer.
+
+    STD2Vformer's output horizon is determined by the length of targets_time
+    passed to the model, so we simply provide a targets_time window of the
+    desired length without any autoregressive unrolling.
+
+    Args:
+        pred_len_test: the evaluation horizon (int).
+        Extract the *last* pred_len_test steps from the available targets
+        window (gap-then-predict scenario).
+    """
+    sources = []
+    outputs = []
+
+    for seqs, seqs_time, targets, targets_time in tqdm(dataloader):
+        seqs, targets = seqs.cuda().float(), targets.cuda().float()
+        seqs_time, targets_time = seqs_time.cuda().float(), targets_time.cuda().float()
+        seqs, targets = seqs.permute(0, 2, 3, 1), targets.permute(0, 2, 3, 1)
+        seqs_time, targets_time = seqs_time.permute(0, 2, 3, 1), targets_time.permute(0, 2, 3, 1)
+
+        avail_len = targets_time.shape[-1]
+        # Clamp to the available length (handles pred_len_test > avail_len gracefully)
+        actual_len = min(pred_len_test, avail_len)
+
+        tgt_time = targets_time[..., -actual_len:]
+        tgt = targets[:, 0:1, :, -actual_len:]
+        tgt_in = targets[..., -actual_len:]
+
+        pred = model(seqs, adj, seqs_time=seqs_time,
+                     targets=tgt_in, targets_time=tgt_time)
+        if pred.shape[1] != 1:
+            pred = pred[:, 0:1, ...]
+
+        sources.extend(tgt.detach().cpu().numpy())
+        outputs.extend(pred.detach().cpu().numpy())
+
+    return np.array(sources), np.array(outputs)
+
+
+@torch.no_grad()
 def pred_st_graph_data(model, dataloader,adj):
     '''
     :param model: spatio-temporal graph model in cuda
@@ -138,7 +180,8 @@ def pred_st_graph_data(model, dataloader,adj):
     return sources, outputs
 
 
-def test(args,model,test_dataloader,adj):
+def test(args,model,test_dataloader,adj,**kwargs):
+    pred_len_test = kwargs.get('pred_len_test', None)
     # tu.model_tool.seed_everything(args.seed, benchmark=False)
 
     for f in os.listdir(args.resume_dir):
@@ -150,7 +193,11 @@ def test(args,model,test_dataloader,adj):
     test_out_dir=os.path.join(args.output_dir,'test')
     os.makedirs(test_out_dir, exist_ok=True) # Flush the GPU's cache
 
-    sources, outputs = pred_st_graph_data(model, test_dataloader,adj)
+    if getattr(args, 'flexible', False) and pred_len_test is not None:
+        sources, outputs = flexible_pred_st_graph_data(
+            model, test_dataloader, adj, args, pred_len_test)
+    else:
+        sources, outputs = pred_st_graph_data(model, test_dataloader,adj)
     torch.cuda.empty_cache()
 
     if args.data_name=="PeMS-Bay"or args.data_name=="METR-LA":
